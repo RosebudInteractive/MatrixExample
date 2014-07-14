@@ -13,6 +13,7 @@ function readMatrix() {
 	});
 }
 
+// multiply vector on matrix
 function multMatrix(matrix, vector) {
 	var result = [];
 	for(var i=0; i<matrix.length; i++) {
