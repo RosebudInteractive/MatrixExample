@@ -14,6 +14,8 @@ function readMatrix() {
 	});
 }
 
+
+//something new
 function multMatrix(matrix, vector) {
 	var result = [];
 	for(var i=0; i<matrix.length; i++) {
