@@ -80,7 +80,7 @@ http.createServer(function (req, res) {
 		elapsed_time("end viewMatrix");
 	  }
 
-	// ���� ������ ��� ����������
+	// если первый раз обращаемся
 	if (!matrixCache.get('matrix').matrix) {
 		matrixCache.on( "expired", function( key, value ){
 			if (key == 'matrix')  {
