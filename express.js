@@ -6,6 +6,9 @@ var NodeCache = require("node-cache");
 var matrixCache = new NodeCache({stdTTL: 3601});
 var start = process.hrtime();
 
+// static files
+app.use("/static", express.static(__dirname + '/static'));
+
 // request main
 app.get('/', function(req, res){
     fs.readFile(__dirname+'/express.html',function (err, data){
