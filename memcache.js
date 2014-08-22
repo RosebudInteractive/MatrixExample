@@ -8,7 +8,6 @@ http.createServer(function(req, res) {
     var query = require('url').parse(req.url).query;
     var queryParse = require('querystring').parse(query);
 
-    console.log(queryParse);
     if (queryParse.act && queryParse.act == 'getcache') {
         memcached.get(queryParse.name, function( err, result ){
             if( err ) throw (err);
