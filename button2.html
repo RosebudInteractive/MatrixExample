@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>node.js</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        var timer = null;
+        function startCalcProcess() {
+            $('#result').html('');
+            if (timer)
+                clearInterval(timer);
+            timer = setInterval(function(){
+                var res = $('#result').html();
+                if (res == '') $('#result').html('.');
+                else if (res == '.') $('#result').html('..');
+                else if (res == '..') $('#result').html('...');
+                else if (res == '...') $('#result').html('....');
+                else if (res == '....') $('#result').html('.....');
+                else $('#result').html('');
+            }, 300);
+        }
+        function stopCalcProcess(){
+            if (timer)
+                clearInterval(timer);
+        }
+
+        function getResult(){
+            startCalcProcess();
+            $.ajax({
+                url: "http://127.0.0.1:8000/calc"
+            }).done(function(data) {
+                stopCalcProcess();
+                $('#result').html(data);
+            }).fail(function() {
+                stopCalcProcess();
+                $('#result').html('error');
+            });
+        }
+    </script>
+
+</head>
+<body>
+
+
+<input type="button" value="Calc" onclick="getResult();" />
+
+
+<div id="result"></div>
+
+</body>
+</html>

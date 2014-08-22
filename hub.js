@@ -41,7 +41,7 @@ if (cluster.isMaster) {
                 res.end();
             });
         } else {
-            fs.readFile(__dirname+'/button.html',function (err, data) {
+            fs.readFile(__dirname+'/button2.html',function (err, data) {
                 if (!err) {
                     res.writeHead(200, {'Content-Type': 'text/html', 'Content-Length': data.length});
                     res.write(data);
