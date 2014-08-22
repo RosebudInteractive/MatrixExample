@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>node.js</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        function setCache(name, value){
+            $.ajax({
+                url: "http://127.0.0.1:8000/",
+                data: {'act':'setcache', 'name':name, 'value':value}
+            }).done(function(data) {
+                $('#result').append('<p>Переменная "'+name+'" установлена: ' + value + '</p>');
+            }).fail(function() {
+                $('#result').html('error');
+            });
+        }
+        function getCache(name){
+            $.ajax({
+                url: "http://127.0.0.1:8000/getcache",
+                data: {'act':'getcache', 'name':name}
+            }).done(function(data) {
+                $('#result').append('<p>Значение переменной "'+name+'" равно: ' + data + '</p>');
+            }).fail(function(err) {
+                $('#result').append('<p>error</p>');
+            });
+        }
+
+    </script>
+
+</head>
+<body>
+
+<form method="post" action="">
+    Имя переменной кеша:<br>
+    <input type="text" value="name" id="cacheName" /><br>
+    Значение переменной кеша:<br>
+    <input type="text" value="" id="cacheValue" /><br>
+    <input type="button" value="Установить" onclick="setCache($('#cacheName').val(), $('#cacheValue').val());" /><br>
+    <input type="button" value="Получить" onclick="getCache($('#cacheName').val());" /><br>
+</form>
+
+<p>Результат:</p>
+<div id="result">
+
+
+</div>
+
+</body>
+</html>
