@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script data-main="../public/main.js" src="../public/require.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        require(
+            ['module1', 'jquery'],
+            function( Module1, $ ){
+                var module1 = new Module1();
+                $('#result').html(module1.getRandomInt(0, 1000));
+            }
+        );
+    </script>
+</head>
+<body>
+<div id="result"></div>
+</body>
+</html>
