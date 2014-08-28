@@ -52,7 +52,7 @@ app.get('/addobject', function(req, res){
     memcached.set('admin' +  adminCounter, admin, lifetime, function( err, result ){
         if( err ) throw (err);
         adminCounter++;
-        console.log(admin);
+        console.log(result);
         res.writeHead(200, {'Content-Type': 'text/plain'});
         res.write(''+result);
         res.end();

@@ -54,6 +54,7 @@
                     function( Admin, $ ){
                         var admin = new Admin(name);
                         admins.push(admin);
+                        console.log(admins);
                         $.ajax({
                             url: "http://127.0.0.1:1325/addobject",
                             data: {'name':name}
@@ -66,13 +67,26 @@
             );
         }
         function getListobject(){
-            $.ajax({
-                url: "http://127.0.0.1:1325/getlistobject"
-            }).done(function(data) {
-                $('#result').append('<p>Список объектов: "'+data+'"</p>');
-            }).fail(function(err) {
-                $('#result').append('<p>error</p>');
-            });
+            require(
+                    ['admin', 'jquery'],
+                    function( Admin, $ ){
+                        $.ajax({
+                            url: "http://127.0.0.1:1325/getlistobject"
+                        }).done(function(data) {
+                            $('#result').append('<p>Список объектов: "'+data+'"</p>');
+                            admins = [];
+                            var names = data.split(',');
+                            for(var i=0; i<names.length; i++) {
+                                var admin = new Admin(names[i]);
+                                admins.push(admin);
+                            }
+                            console.log(admins);
+                        }).fail(function(err) {
+                            $('#result').append('<p>error</p>');
+                        });
+                    }
+            );
+
         }
 
     </script>
