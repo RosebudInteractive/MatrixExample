@@ -5,6 +5,9 @@ var app = express();
 var Module1 = require('./public/module1');
 var module1 = new Module1();
 
+var Admin = require('./public/admin');
+
+
 // инициализация memcached
 var Memcached = require('memcached');
 var memcached = new Memcached('localhost:11211');
@@ -39,6 +42,34 @@ app.get('/setcache', function(req, res){
         if( err ) throw (err);
         res.writeHead(200, {'Content-Type': 'text/plain'});
         res.write(''+result);
+        res.end();
+    });
+});
+
+var adminCounter=0;
+app.get('/addobject', function(req, res){
+    var admin = new Admin(req.query.name);
+    memcached.set('admin' +  adminCounter, admin, lifetime, function( err, result ){
+        if( err ) throw (err);
+        adminCounter++;
+        console.log(admin);
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.write(''+result);
+        res.end();
+    });
+});
+app.get('/getlistobject', function(req, res){
+    var keys = [];
+    for(var i=0; i<adminCounter; i++)
+        keys.push('admin' +  i);
+    memcached.getMulti(keys, function( err, result ){
+        if( err ) throw (err);
+        console.log(result);
+        var names = [];
+        for(var i=0; i<adminCounter; i++)
+            names.push(result['admin' +  i].name);
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.write(''+names.join(','));
         res.end();
     });
 });
