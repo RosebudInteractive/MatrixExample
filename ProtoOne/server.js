@@ -72,12 +72,12 @@ webSocketServer.on('connection', function(ws) {
 
     setTimeout(function(){
         for(var key in clients) {
+            if (clients[key].readyState == 1) // opened
             clients[key].send(JSON.stringify({error:null, action:'newconn', name:'новое соединение'}));;
         }
     }, 1000);
 
     ws.on('message', function(message) {
-        console.log(message, JSON.parse(message));
         var data = JSON.parse(message);
         switch (data.action) {
             case 'addobject':
