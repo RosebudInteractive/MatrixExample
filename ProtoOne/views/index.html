@@ -6,6 +6,7 @@
     <script src="../public/class-extend.js"></script>
     <script data-main="../public/main.js" src="../public/require.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
     <script>
         function execClientCode() {
             require(
@@ -46,47 +47,32 @@
         }
 
 
-        var admins = [];
-        function addObject(name){
-            // создаем объект Admin
-            require(
-                    ['admin', 'jquery'],
-                    function( Admin, $ ){
-                        var admin = new Admin(name);
-                        admins.push(admin);
-                        console.log(admins);
-                        $.ajax({
-                            url: "http://127.0.0.1:1325/addobject",
-                            data: {'name':name}
-                        }).done(function(data) {
-                            $('#result').append('<p>Добавлен объект "'+name+'"</p>');
-                        }).fail(function(err) {
-                            $('#result').append('<p>error</p>');
-                        });
-                    }
-            );
+        // работа с сокетами
+        if (!window.WebSocket) {
+            document.body.innerHTML = 'WebSocket в этом браузере не поддерживается.';
         }
-        function getListobject(){
-            require(
-                    ['admin', 'jquery'],
-                    function( Admin, $ ){
-                        $.ajax({
-                            url: "http://127.0.0.1:1325/getlistobject"
-                        }).done(function(data) {
-                            $('#result').append('<p>Список объектов: "'+data+'"</p>');
-                            admins = [];
-                            var names = data.split(',');
-                            for(var i=0; i<names.length; i++) {
-                                var admin = new Admin(names[i]);
-                                admins.push(admin);
-                            }
-                            console.log(admins);
-                        }).fail(function(err) {
-                            $('#result').append('<p>error</p>');
-                        });
-                    }
-            );
+        // создать подключение
+        var socket = new WebSocket("ws://localhost:8081");
 
+        // обработчик входящих сообщений
+        socket.onmessage = function(event) {
+            console.log(event)
+            var data = JSON.parse(event.data);
+            switch (data.action) {
+                case 'addobject':
+                    $('#result').append('<p>Объект '+data.type+' c именем "'+data.name+'" добавлен</p>');
+                    break;
+                case 'getlistobject':
+                    $('#result').append('<p>Список объектов '+data.type+'s: "'+data.names+'"</p>');
+                    break;
+            }
+        };
+
+        function addObject(name, type){
+            socket.send(JSON.stringify({action:'addobject', type:type, name:name}));
+        }
+        function getListobject(type){
+            socket.send(JSON.stringify({action:'getlistobject', type:type}));
         }
 
     </script>
@@ -113,8 +99,10 @@
 <form method="post" action="">
     Имя:<br>
     <input type="text" value="" id="objName" /><br>
-    <input type="button" value="Add" onclick="addObject($('#objName').val());" /><br>
-    <input type="button" value="GetList" onclick="getListobject();" /><br>
+    <input type="button" value="Add User" onclick="addObject($('#objName').val(), 'user');" /><br>
+    <input type="button" value="Add Admin" onclick="addObject($('#objName').val(), 'admin');" /><br>
+    <input type="button" value="GetList Users" onclick="getListobject('user');" /><br>
+    <input type="button" value="GetList Admins" onclick="getListobject('admin');" /><br>
 </form>
 
 

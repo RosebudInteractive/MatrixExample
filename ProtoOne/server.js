@@ -1,17 +1,13 @@
 var http = require('http');
 var express = require('express');
 var app = express();
+var WebSocketServer = new require('ws');
 
 var Module1 = require('./public/module1');
 var module1 = new Module1();
 
+var User = require('./public/user');
 var Admin = require('./public/admin');
-
-
-// инициализация memcached
-var Memcached = require('memcached');
-var memcached = new Memcached('localhost:11211');
-var lifetime = 86400; //24hrs
 
 // обработчик файлов html будет шаблонизатор ejs
 app.engine('html', require('ejs').renderFile);
@@ -46,36 +42,45 @@ app.get('/setcache', function(req, res){
     });
 });
 
-var adminCounter=0;
-app.get('/addobject', function(req, res){
-    var admin = new Admin(req.query.name);
-    memcached.set('admin' +  adminCounter, admin, lifetime, function( err, result ){
-        if( err ) throw (err);
-        adminCounter++;
-        console.log(result);
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.write(''+result);
-        res.end();
-    });
-});
-app.get('/getlistobject', function(req, res){
-    var keys = [];
-    for(var i=0; i<adminCounter; i++)
-        keys.push('admin' +  i);
-    memcached.getMulti(keys, function( err, result ){
-        if( err ) throw (err);
-        console.log(result);
-        var names = [];
-        for(var i=0; i<adminCounter; i++)
-            names.push(result['admin' +  i].name);
-        res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.write(''+names.join(','));
-        res.end();
-    });
-});
 
 // статические данные и модули для подгрузки на клиент
 app.use("/public", express.static(__dirname + '/public'));
+
+
+// коллекции пользователей и админов
+var users=[], admins = [];
+
+// WebSocket-сервер на порту 8081
+var webSocketServer = new WebSocketServer.Server({port: 8081});
+webSocketServer.on('connection', function(ws) {
+    ws.on('message', function(message) {
+        console.log(message, JSON.parse(message));
+        var data = JSON.parse(message);
+        switch (data.action) {
+            case 'addobject':
+                if (data.type == 'admin') {
+                    var admin = new Admin(data.name);
+                    admins.push(admin);
+                } else {
+                    var user = new User(data.name);
+                    users.push(user);
+                }
+                ws.send(JSON.stringify({error:null, action:data.action, type:data.type, name:data.name}));
+                break;
+            case 'getlistobject':
+                var coll = null;
+                if (data.type == 'admin')
+                    coll = admins;
+                else
+                    coll = users;
+                var names = [];
+                for(var i=0; i<coll.length; i++)
+                    names.push(coll[i].getName());
+                ws.send(JSON.stringify({error:null, action:data.action, type:data.type, names:names.join(',')}));
+                break;
+        }
+    });
+});
 
 // запускаем http сервер
 http.createServer(app).listen(1325);
