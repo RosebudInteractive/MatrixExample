@@ -65,6 +65,9 @@
                 case 'getlistobject':
                     $('#result').append('<p>Список объектов '+data.type+'s: "'+data.names+'"</p>');
                     break;
+                case 'newconn':
+                    $('#result').append('<p>'+data.name+'</p>');
+                    break;
             }
         };
 

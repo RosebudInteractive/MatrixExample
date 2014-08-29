@@ -50,9 +50,25 @@ app.use("/public", express.static(__dirname + '/public'));
 // коллекции пользователей и админов
 var users=[], admins = [];
 
+// подключенные клиенты
+var clients = {};
+
 // WebSocket-сервер на порту 8081
 var webSocketServer = new WebSocketServer.Server({port: 8081});
+
 webSocketServer.on('connection', function(ws) {
+
+    // запоминаем клиента подключенного
+    var id = Math.random();
+    clients[id] = ws;
+    console.log("новое соединение " + id);
+
+    setTimeout(function(){
+        for(var key in clients) {
+            clients[key].send(JSON.stringify({error:null, action:'newconn', name:'новое соединение'}));;
+        }
+    }, 1000);
+
     ws.on('message', function(message) {
         console.log(message, JSON.parse(message));
         var data = JSON.parse(message);
@@ -79,6 +95,10 @@ webSocketServer.on('connection', function(ws) {
                 ws.send(JSON.stringify({error:null, action:data.action, type:data.type, names:names.join(',')}));
                 break;
         }
+    });
+
+    ws.on('close', function() {
+        delete clients[id];
     });
 });
 
