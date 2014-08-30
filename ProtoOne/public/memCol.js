@@ -4,7 +4,6 @@ if (typeof define !== 'function') {
 }
 
 define(
-	"memCol",
 	[],
 	function() {
 		var MemCol = Class.extend({
