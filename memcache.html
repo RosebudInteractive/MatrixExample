@@ -6,8 +6,8 @@
     <script>
         function setCache(name, value){
             $.ajax({
-                url: "http://127.0.0.1:8000/",
-                data: {'act':'setcache', 'name':name, 'value':value}
+                url: "http://127.0.0.1:8000/setcache",
+                data: {'name':name, 'value':value}
             }).done(function(data) {
                 $('#result').append('<p>Переменная "'+name+'" установлена: ' + value + '</p>');
             }).fail(function() {
@@ -17,7 +17,7 @@
         function getCache(name){
             $.ajax({
                 url: "http://127.0.0.1:8000/getcache",
-                data: {'act':'getcache', 'name':name}
+                data: {'name':name}
             }).done(function(data) {
                 $('#result').append('<p>Значение переменной "'+name+'" равно: ' + data + '</p>');
             }).fail(function(err) {
@@ -40,10 +40,7 @@
 </form>
 
 <p>Результат:</p>
-<div id="result">
-
-
-</div>
+<div id="result"></div>
 
 </body>
 </html>

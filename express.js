@@ -25,7 +25,9 @@ app.get('/', function(req, res){
     });
 });
 
-// request /generate?size=10
+// request /generate?size=10Âíèìàíèå! Ó âàñ íå óêàçàí email äëÿ óâåäîìëåíèé!  (Âàø ýëåêòðîííûé àäðåñ äëÿ óâåäîìëåíèé íå ïîäòâåðæäåí)
+Íàñòîÿòåëüíî ðåêîìåíäóåòñÿ óêàçàòü email (ýòî ñäåëàòü), ò.ê. äàííûé email áóäåò èñïîëüçîâàí äëÿ âàæíûõ íàïîìèíàíèé è âîññòàíîâëåíèÿ ïàðîëÿ â ñëó÷àå åãî óòåðè.
+    Çàäàòü/ïîäòâåðäèòü email äëÿ óâåäîìëåíèé (ññûëêîé)
 app.get('/generate', function(req, res){
     elapsed_time("received request", true);
 	var size = parseInt(req.query.size);
