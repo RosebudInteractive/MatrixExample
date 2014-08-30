@@ -9,12 +9,15 @@ var module1 = new Module1();
 var User = require('./public/user');
 var Admin = require('./public/admin');
 
+var Db = require('./public/memDataBase');
+
 // обработчик файлов html будет шаблонизатор ejs
 app.engine('html', require('ejs').renderFile);
 
 // обработка главной, возвращает случайное число
 app.get('/', function(req, res){
-    res.end(module1.getRandomInt(0, 1000).toString());
+	res.render('index1.html');
+    //res.end(module1.getRandomInt(0, 1000).toString());
 });
 
 // отображаем index.html
@@ -52,6 +55,10 @@ var users=[], admins = [];
 
 // подключенные клиенты
 var clients = {};
+
+var myDB = new Db("ServerDataBase");
+console.log(myDB.name);
+
 
 // WebSocket-сервер на порту 8081
 var webSocketServer = new WebSocketServer.Server({port: 8081});
