@@ -4,7 +4,7 @@ if (typeof define !== 'function') {
 }
 
 define(
-	["memCol"],
+	["./memCol"],
 	function(MemCollection) {
 		var MemDataBase = Class.extend({
 		
