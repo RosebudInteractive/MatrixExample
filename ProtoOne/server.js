@@ -56,8 +56,8 @@ var users=[], admins = [];
 // подключенные клиенты
 var clients = {};
 
-var myDB = new Db("ServerDataBase");
-console.log(myDB.name);
+var myDB = new Db("ServerDataBase puk");
+console.log(myDB.getName());
 
 
 // WebSocket-сервер на порту 8081

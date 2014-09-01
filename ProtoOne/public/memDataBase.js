@@ -1,27 +1,38 @@
-if (typeof define !== 'function') {
+п»їif (typeof define !== 'function') {
     var define = require('amdefine')(module);
     var Class = require('class.extend');
 }
 
 define(
-	["./memCol"],
-	function(MemCollection) {
+	["./memCol", "./memObj"],
+	function(MemCollection,MemObject) {
 		var MemDataBase = Class.extend({
 		
 			log: [],
+			_robjs: [],
 		
 			init: function(name){
-				this.name = name;
+				this._name = name;
 			},
 			
-			// Новая коллекция
+			getName: function() {
+				return this._name;
+			},
+			
+			_addRoot: function(obj) {
+				this._robjs.push(obj);
+			},
+			/*
+			// РЅРѕРІР°СЏ РєРѕР»Р»РµРєС†РёСЏ
 			newCol: function() {
-				return new MemCollection("POPO");
+				return new MemCollection("POPO",this);
 			},
 			
-			// Удалить коллекцию
+			// СѓРґР°Р»РёС‚СЊ РєРѕР»Р»РµРєС†РёСЋ
 			delCol: function() {
-			}
+			}*/
+			
+			
 
 		});
 		return MemDataBase;
