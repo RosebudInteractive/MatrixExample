@@ -1,5 +1,5 @@
 
-var N = 1000000;
+var N = 10000
 
 var setka = [1000, 10000, 50000, 100000];
 for (var s=0; s<setka.length; s++){
@@ -21,7 +21,7 @@ for (var s=0; s<setka.length; s++){
     for (var i=0; i<N; i++)
         Arr2.push(GuidsArr[rand(0, GuidsArr.length-1)]);
 
-    // замеряем 
+    // замеряем
     console.time('time1 M='+ M);
     for (var i=0; i<N; i++)
         ObjectHolder[Arr2[i]].Counter++;
